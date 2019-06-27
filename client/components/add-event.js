@@ -22,7 +22,6 @@ class AddEvent extends React.Component {
 
   onSubmit(evt) {
     evt.preventDefault()
-    console.log(evt.target.eventName.value)
     let eventName = evt.target.eventName.value
     let location = evt.target.location.value
     let locationName = evt.target.locationName.value
@@ -36,13 +35,16 @@ class AddEvent extends React.Component {
       date,
       time
     })
-    console.log(this.state, this.props)
-    let event = this.state
-    this.props.addEvent(event)
+    this.props.addEvent({
+      eventName,
+      location,
+      locationName,
+      date,
+      time
+    })
   }
 
   render() {
-    console.log(this.props.currentEvent)
     return (
       <div>
         <h3>Add Your Event</h3>
@@ -90,13 +92,16 @@ class AddEvent extends React.Component {
 const mapState = state => {
   return {
     email: state.user.email,
-    currentEvent: state.event.currentEvent
+    currentEvent: state.event
   }
 }
 
-const mapDispatch = dispatch => {
+const mapDispatch = (dispatch, ownProps) => {
   return {
-    addEvent: event => dispatch(addEventThunk(event))
+    addEvent: event => {
+      dispatch(addEventThunk(event))
+      ownProps.history.push('/myEvents')
+    }
   }
 }
 

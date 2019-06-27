@@ -7,10 +7,10 @@ const Event = db.define('event', {
     allowNull: false
   },
   date: {
-    type: Sequelize.DATE
+    type: Sequelize.STRING
   },
   time: {
-    type: Sequelize.TIME
+    type: Sequelize.STRING
   },
   adminId: {
     type: Sequelize.INTEGER
@@ -22,13 +22,7 @@ const Event = db.define('event', {
     type: Sequelize.STRING
   },
   passcode: {
-    type: Sequelize.STRING,
-    set() {
-      let value = Math.random()
-        .toString(36)
-        .substring(9, 13)
-      this.setDataValue('name', value)
-    }
+    type: Sequelize.STRING
   }
 })
 
