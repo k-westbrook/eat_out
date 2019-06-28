@@ -18,15 +18,19 @@ router.post('/addEvent', async (req, res, next) => {
       adminId: userId,
       passcode
     })
-    const guestCreated = await Guest.create({
-      userId: userId,
-      email: email,
-      isRegisteredUser: true
+    const guestCreated = await Guest.findOrCreate({
+      where: {
+        userId: userId
+      },
+      defaults: {
+        email: email,
+        isRegisteredUser: true
+      }
     })
 
-    const eventReturned = await guestCreated.addEvent(eventCreated)
+    await eventCreated.addGuest(guestCreated[0])
 
-    res.json(eventReturned)
+    res.status(201).send()
   } catch (err) {
     next(err)
   }
@@ -45,6 +49,27 @@ router.get('/getEventList', async (req, res, next) => {
     const eventsFound = await guestFound.getEvents()
 
     res.json(eventsFound)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/getEvent/:eventId', async (req, res, next) => {
+  try {
+    const {userId, email} = req.session
+
+    const guestFound = await Guest.findOne({
+      where: {
+        userId: userId
+      }
+    })
+
+    const event = await Event.findOne({
+      where: {id: req.params.eventId}
+    })
+    const guests = await event.getGuests()
+
+    res.json({event, guests})
   } catch (err) {
     next(err)
   }

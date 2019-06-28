@@ -2,7 +2,14 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {withRouter, Route, Switch} from 'react-router-dom'
 import PropTypes from 'prop-types'
-import {Login, Signup, UserHome, AddEvent, EventList} from './components'
+import {
+  Login,
+  Signup,
+  UserHome,
+  AddEvent,
+  EventList,
+  SingleEvent
+} from './components'
 import {me} from './store'
 
 /**
@@ -27,6 +34,7 @@ class Routes extends Component {
             <Route path="/home" component={UserHome} />
             <Route path="/addEvent" component={AddEvent} />
             <Route path="/myEvents" component={EventList} />
+            <Route path="/event:eventId" component={SingleEvent} />
           </Switch>
         )}
         {/* Displays our Login component as a fallback */}
