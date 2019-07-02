@@ -74,3 +74,43 @@ router.get('/getEvent/:eventId', async (req, res, next) => {
     next(err)
   }
 })
+
+router.post('/addGuest/:eventId', async (req, res, next) => {
+  try {
+    const {userId} = req.session
+    const {email} = req.body
+
+    const userFound = await User.findOne({
+      where: {
+        email: email
+      }
+    })
+
+    const guestCreated = await Guest.findOrCreate({
+      where: {
+        email: email
+      },
+      defaults: {
+        email: email,
+        isRegisteredUser: true,
+        userId: userFound.id
+      }
+    })
+
+    await GuestEvent.findOrCreate({
+      where: {
+        eventId: req.params.eventId,
+        guestId: guestCreated[0].id
+      },
+      defaults: {
+        eventId: req.params.eventId,
+        guestId: guestCreated[0].id,
+        isComing: true
+      }
+    })
+
+    // res.json({event, guests})
+  } catch (err) {
+    next(err)
+  }
+})

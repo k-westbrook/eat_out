@@ -5,6 +5,7 @@ import history from '../history'
  * ACTION TYPES
  */
 const ADD_EVENT = 'ADD_EVENT'
+const ADD_GUEST = 'ADD_GUEST'
 const GET_EVENT_LIST = 'GET_EVENT_LIST'
 const GET_SINGLE_EVENT = 'GET_SINGLE_EVENT'
 
@@ -20,6 +21,7 @@ const defaultEventObject = {
  * ACTION CREATORS
  */
 const addEvent = event => ({type: ADD_EVENT, event})
+const addGuest = guest => ({type: ADD_GUEST, guest})
 const getEventList = eventList => ({type: GET_EVENT_LIST, eventList})
 const getSingleEvent = eventObject => ({type: GET_SINGLE_EVENT, eventObject})
 
@@ -36,13 +38,25 @@ export const addEventThunk = event => async dispatch => {
     console.error(err)
   }
 }
+export const addGuestThunk = (eventId, guest) => async dispatch => {
+  try {
+    console.log(guest)
+    const res = await axios.post(`/api/event/addGuest/${eventId}`, {
+      email: guest
+    })
+    let guestAdded = res.data
+
+    dispatch(addGuest(guestAdded))
+  } catch (err) {
+    console.error(err)
+  }
+}
 
 export const getEventListThunk = () => async dispatch => {
   try {
     const res = await axios.get('/api/event/getEventList')
     let eventListReceived = res.data
 
-    console.log('EVENT LIST', eventListReceived)
     dispatch(getEventList(eventListReceived))
   } catch (err) {
     console.error(err)
@@ -54,7 +68,6 @@ export const getSingleEventThunk = eventId => async dispatch => {
     const res = await axios.get(`/api/event/getEvent/${eventId}`)
     let eventReceived = res.data
 
-    console.log('EVENT LIST', eventReceived)
     dispatch(getSingleEvent(eventReceived))
   } catch (err) {
     console.error(err)
