@@ -40,13 +40,12 @@ export const addEventThunk = event => async dispatch => {
 }
 export const addGuestThunk = (eventId, guest) => async dispatch => {
   try {
-    console.log(guest)
     const res = await axios.post(`/api/event/addGuest/${eventId}`, {
       email: guest
     })
     let guestAdded = res.data
 
-    dispatch(addGuest(guestAdded))
+    dispatch(addGuest(guestAdded[0]))
   } catch (err) {
     console.error(err)
   }
@@ -91,6 +90,11 @@ export default function(state = defaultEventObject, action) {
     }
     case GET_SINGLE_EVENT: {
       return {...state, currentEvent: action.eventObject}
+    }
+    case ADD_GUEST: {
+      let newGuestArray = [...state.currentEvent.guests, action.guest]
+      let currentEventUpdate = {...state.currentEvent, guests: newGuestArray}
+      return {...state, currentEvent: currentEventUpdate}
     }
     default:
       return state

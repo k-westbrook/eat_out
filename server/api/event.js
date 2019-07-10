@@ -109,11 +109,18 @@ router.post('/addGuest/:eventId', async (req, res, next) => {
       defaults: {
         eventId: req.params.eventId,
         guestId: guestCreated[0].id,
-        isComing: true
+        isComing: false
       }
     })
 
-    // res.json({event, guests})
+    const event = await Event.findOne({
+      where: {id: req.params.eventId}
+    })
+    const guests = await event.getGuests()
+
+    const addedGuest = guests.filter(guest => guest.id === guestCreated[0].id)
+
+    res.json(addedGuest)
   } catch (err) {
     next(err)
   }

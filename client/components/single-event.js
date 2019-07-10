@@ -22,36 +22,36 @@ class SingleEvent extends React.Component {
     evt.preventDefault()
     let eventId = this.state.eventId
     let guestEmail = evt.target.guestEmail.value
-    console.log(eventId, guestEmail)
     this.props.addGuest(eventId, guestEmail)
   }
   render() {
+    console.log(this.props.guests)
     return (
       <div>
         <h3>Event</h3>
-        {this.props.currentEvent.event ? (
+        {this.props.currentEvent ? (
           <div>
-            <h4>Name:{this.props.currentEvent.event.name}</h4>
-            <h4>Location:{this.props.currentEvent.event.locationName}</h4>
-            <h4>Address:{this.props.currentEvent.event.location}</h4>
-            <h4>Time:{this.props.currentEvent.event.time}</h4>
-            <h4>Date:{this.props.currentEvent.event.date}</h4>
+            <h4>Name:{this.props.currentEvent.name}</h4>
+            <h4>Location:{this.props.currentEvent.locationName}</h4>
+            <h4>Address:{this.props.currentEvent.location}</h4>
+            <h4>Time:{this.props.currentEvent.time}</h4>
+            <h4>Date:{this.props.currentEvent.date}</h4>
             <div>
               <h4>Guests</h4>
-              {this.props.currentEvent.guests.map(guest => {
+              {this.props.guests.map(guest => {
                 return (
-                  <p key={guest.id}>
+                  <div key={guest.id}>
                     {guest.email}{' '}
                     {guest.GuestEvent.isComing ? (
-                      <div>
+                      <p>
                         is coming!<input type="submit" value="Can't attend" />
-                      </div>
+                      </p>
                     ) : (
-                      <div>
+                      <p>
                         can't come.<input type="submit" value="Can attend" />
-                      </div>
+                      </p>
                     )}
-                  </p>
+                  </div>
                 )
               })}
             </div>
@@ -78,7 +78,8 @@ class SingleEvent extends React.Component {
 
 const mapState = state => {
   return {
-    currentEvent: state.event.currentEvent
+    currentEvent: state.event.currentEvent.event,
+    guests: state.event.currentEvent.guests
   }
 }
 
