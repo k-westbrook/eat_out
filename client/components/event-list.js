@@ -4,26 +4,34 @@ import {getEventListThunk} from '../store/event'
 import {Link} from 'react-router-dom'
 
 class EventList extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      componentLoaded: false
+    }
+  }
   componentDidMount() {
     this.props.getEventList()
+    console.log(this.state)
+    this.setState({componentLoaded: true})
   }
   render() {
-    console.log(this.props.userEvents)
+    console.log(this.state)
     return (
       <div>
         <h3>My Events</h3>
-        {this.props.userEvents ? (
+        {this.state.componentLoaded && this.props.userEvents.length ? (
           this.props.userEvents.map(event => {
+            console.log(event.id)
             return (
-              <Link key={event.id} to={`/event${event.id}`}>
-                {' '}
-                {event.name}
-              </Link>
+              <div key={event.id}>
+                <Link to={`/event${event.id}`}> {event.name}</Link>
+              </div>
             )
           })
         ) : (
           <div>
-            <p>Add An Event!</p>
+            <Link to="/addEvent">Add an Event</Link>
           </div>
         )}
       </div>

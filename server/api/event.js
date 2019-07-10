@@ -30,7 +30,7 @@ router.post('/addEvent', async (req, res, next) => {
 
     await eventCreated.addGuest(guestCreated[0])
 
-    res.status(201).send()
+    res.json(eventCreated)
   } catch (err) {
     next(err)
   }
@@ -40,13 +40,17 @@ router.get('/getEventList', async (req, res, next) => {
   try {
     const {userId, email} = req.session
 
-    const guestFound = await Guest.findOne({
+    const guestFound = await Guest.findOrCreate({
       where: {
         userId: userId
+      },
+      defaults: {
+        email: email,
+        isRegisteredUser: true
       }
     })
 
-    const eventsFound = await guestFound.getEvents()
+    const eventsFound = await guestFound[0].getEvents()
 
     res.json(eventsFound)
   } catch (err) {

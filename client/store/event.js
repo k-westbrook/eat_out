@@ -32,7 +32,7 @@ export const addEventThunk = event => async dispatch => {
   try {
     const res = await axios.post('/api/event/addEvent', event)
     let eventAdded = res.data
-
+    console.log(res.data)
     dispatch(addEvent(eventAdded))
   } catch (err) {
     console.error(err)
@@ -80,6 +80,7 @@ export const getSingleEventThunk = eventId => async dispatch => {
 export default function(state = defaultEventObject, action) {
   switch (action.type) {
     case ADD_EVENT: {
+      console.log(action.event)
       return {
         currentEvent: action.event,
         userEvents: [...state.userEvents, action.event]
